@@ -31,6 +31,7 @@ public class Helper {
     }
 
     public static void setupRender() {
+        RenderSystem.enableDepthTest();
         RenderSystem.disableCull();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -41,6 +42,7 @@ public class Helper {
         RenderSystem.disableBlend();
         RenderSystem.enableCull();
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
+        RenderSystem.disableDepthTest();
     }
 
     public static void registerBufferedImageTexture(Identifier i, BufferedImage bi) {

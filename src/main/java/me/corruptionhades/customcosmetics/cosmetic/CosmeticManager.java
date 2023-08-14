@@ -1,5 +1,6 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
+import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.impl.Test;
 
 import java.util.ArrayList;
@@ -27,5 +28,15 @@ public class CosmeticManager {
 
     public List<Cosmetic> getCosmetics() {
         return cosmetics;
+    }
+
+    public List<CustomCosmetic> getCustomCosmetics() {
+        List<CustomCosmetic> customCosmetics = new ArrayList<>();
+        for(Cosmetic cosmetic : cosmetics) {
+            if(cosmetic instanceof CustomCosmetic) {
+                customCosmetics.add((CustomCosmetic) cosmetic);
+            }
+        }
+        return customCosmetics;
     }
 }

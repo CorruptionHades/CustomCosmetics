@@ -1,9 +1,8 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 
 public abstract class Cosmetic {
 
@@ -15,7 +14,7 @@ public abstract class Cosmetic {
         this.bodyPart = bodyPart;
     }
 
-    public abstract void render(AbstractClientPlayerEntity player, MatrixStack matrices);
+    public abstract void render(PlayerEntityModel<?> model, AbstractClientPlayerEntity player, MatrixStack matrices);
 
     public String getName() {
         return name;

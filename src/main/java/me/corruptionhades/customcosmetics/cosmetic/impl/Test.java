@@ -4,8 +4,8 @@ import me.corruptionhades.customcosmetics.cosmetic.BodyPart;
 import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
 import me.corruptionhades.customcosmetics.objfile.ObjFile;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
 import java.io.IOException;
@@ -25,11 +25,13 @@ public class Test extends Cosmetic {
     }
 
     @Override
-    public void render(AbstractClientPlayerEntity player, MatrixStack matrices) {
+    public void render(PlayerEntityModel<?> model, AbstractClientPlayerEntity player, MatrixStack matrices) {
         if(obj != null) {
             Matrix4f matrix4f = new Matrix4f();
-            matrix4f.scale(0.15f, 0.15f, 0.15f);
-            obj.draw(matrices, matrix4f, new Vec3d(0, 100, 0));
+            matrix4f.scale(0.12f, 0.12f, 0.12f);
+            matrix4f.translate(3.95f, 3f, 0.2f);
+            matrix4f.rotate(-190, 0, 1, 0);
+            obj.draw(matrices, matrix4f);
         }
     }
 }

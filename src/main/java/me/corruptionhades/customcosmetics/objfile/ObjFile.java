@@ -169,14 +169,13 @@ public class ObjFile implements Closeable {
 	 * @param viewMatrix View matrix to apply to this ObjFile, independent of any other matrix.
 	 * @param origin     Origin point to draw at
 	 */
-	public void draw(MatrixStack stack, Matrix4f viewMatrix, Vec3d origin) {
+	public void draw(MatrixStack stack, Matrix4f viewMatrix) {
 		if (closed) {
 			throw new IllegalStateException("Closed");
 		}
 		if (!baked) {
 			bake();
 		}
-		Vec3d o = transformVec3d(origin);
 		Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
 		Matrix4f m4f = new Matrix4f(stack.peek().getPositionMatrix());
 		//m4f.translate((float) o.x, (float) o.y, (float) o.z);
