@@ -1,6 +1,7 @@
 package me.corruptionhades.customcosmetics.mixin;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
+import me.corruptionhades.customcosmetics.ping.Pinger;
 import me.corruptionhades.customcosmetics.ui.MainScreen;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
@@ -21,6 +22,9 @@ public class KeyboardMixin {
     public void onKey(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
         if(key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             MinecraftClient.getInstance().setScreen(new MainScreen());
+        }
+        else if(key == GLFW.GLFW_KEY_R) {
+            Pinger.ping();
         }
         else if(key == GLFW.GLFW_KEY_J) {
             CustomCosmeticsClient.open();

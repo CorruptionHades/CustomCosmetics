@@ -2,14 +2,18 @@ package me.corruptionhades.customcosmetics.objfile;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BuiltBuffer;
+import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,7 +26,7 @@ import java.util.stream.IntStream;
 
 public class Helper {
 
-    public static VertexBuffer createVbo(BufferBuilder.BuiltBuffer builder, VertexBuffer.Usage expectedUsage) {
+    public static VertexBuffer createVbo(BuiltBuffer builder, GlUsage expectedUsage) {
         VertexBuffer buffer = new VertexBuffer(expectedUsage);
         buffer.bind();
         buffer.upload(builder);
@@ -31,10 +35,11 @@ public class Helper {
     }
 
     public static void setupRender() {
-        RenderSystem.enableDepthTest();
         RenderSystem.disableCull();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+       // RenderSystem.depthFunc(GL12.GL_LEQUAL);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
@@ -63,7 +68,7 @@ public class Helper {
 
     @Contract(value = "-> new", pure = true)
     public static Identifier randomIdentifier() {
-        return new Identifier("customcosmetic", "temp/" + randomString(32));
+        return Identifier.of("customcosmetic", "temp/" + randomString(32));
     }
 
     private static String randomString(int length) {

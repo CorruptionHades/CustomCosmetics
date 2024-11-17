@@ -1,9 +1,11 @@
 package me.corruptionhades.customcosmetics.mixin;
 
 import me.corruptionhades.customcosmetics.cosmetic.CosmeticFeatureRenderer;
+import me.corruptionhades.customcosmetics.ping.Pinger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +20,9 @@ public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
 
     @Inject(method = "render", at = @At("RETURN"))
-    public void renderHud(DrawContext context, float tickDelta, CallbackInfo ci) {
+    public void renderHud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         context.drawText(client.textRenderer, CosmeticFeatureRenderer.text, 10, 10, -1, false);
+
+        Pinger.render(context);
     }
 }

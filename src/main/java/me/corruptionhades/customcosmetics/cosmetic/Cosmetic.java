@@ -8,13 +8,17 @@ public abstract class Cosmetic {
 
     private final String name;
     protected BodyPart bodyPart;
+    public final boolean isItem;
 
-    public Cosmetic(String name, BodyPart bodyPart) {
+    public Cosmetic(String name, BodyPart bodyPart, boolean isItem) {
         this.name = name;
         this.bodyPart = bodyPart;
+        this.isItem = isItem;
     }
 
-    public abstract void render(PlayerEntityModel<?> model, AbstractClientPlayerEntity player, MatrixStack matrices);
+    public abstract void render(PlayerEntityModel model, MatrixStack matrices);
+
+    public void onTick() {}
 
     public String getName() {
         return name;
@@ -27,4 +31,6 @@ public abstract class Cosmetic {
     public void setBodyPart(BodyPart bodyPart) {
         this.bodyPart = bodyPart;
     }
+
+    public abstract void loadTexture();
 }

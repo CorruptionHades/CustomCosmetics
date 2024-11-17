@@ -1,8 +1,11 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
-import me.corruptionhades.customcosmetics.cosmetic.impl.Test;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.WingPreset;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.ShieldPreset;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.SwordPreset;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,21 @@ public class CosmeticManager {
     }
 
     public void init() {
-        registerCosmetic(new Test());
+     //   registerCosmetic(new Test());
+        registerCosmetic(new WingPreset("wichtiger_dark_wings", BodyPart.BODY,
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/wichtiger.obj"),
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/frames/")));
+
+        registerCosmetic(new SwordPreset(
+                "obsidian_sword", new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/dragon_sword_ob.obj"),
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/frames")
+        ));
+
+        registerCosmetic(new ShieldPreset(
+                "no_risk_black_shield",
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/roundshield.obj"),
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/frames/")
+        ));
     }
 
     public void registerCosmetic(Cosmetic cosmetic) {
@@ -38,5 +55,15 @@ public class CosmeticManager {
             }
         }
         return customCosmetics;
+    }
+
+    public List<ItemCosmetic> getItemCosmetics() {
+        List<ItemCosmetic> itemCosmetics = new ArrayList<>();
+        for(Cosmetic cosmetic : cosmetics) {
+            if(cosmetic instanceof ItemCosmetic) {
+                itemCosmetics.add((ItemCosmetic) cosmetic);
+            }
+        }
+        return itemCosmetics;
     }
 }

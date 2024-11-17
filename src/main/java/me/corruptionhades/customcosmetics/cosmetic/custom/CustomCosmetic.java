@@ -1,5 +1,6 @@
 package me.corruptionhades.customcosmetics.cosmetic.custom;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
 import me.corruptionhades.customcosmetics.cosmetic.BodyPart;
 import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
@@ -36,8 +37,8 @@ public class CustomCosmetic extends Cosmetic {
 
     private final List<Custom3ValueAnimation> customAnimations = new ArrayList<>();
 
-    public CustomCosmetic(String name, BodyPart type) {
-        super(name, type);
+    public CustomCosmetic(String name, BodyPart type, boolean item) {
+        super(name, type, item);
         CustomCosmeticsClient.getInstance().getCosmeticManager().registerCosmetic(this);
     }
 
@@ -50,7 +51,7 @@ public class CustomCosmetic extends Cosmetic {
      * @see CustomCosmeticsClient#onTick() for animated texture updating
      */
     @Override
-    public void render(PlayerEntityModel<?> model, AbstractClientPlayerEntity player, MatrixStack matrices) {
+    public void render(PlayerEntityModel model, MatrixStack matrices) {
 
         Matrix4f matrix4f = new Matrix4f();
 
@@ -64,7 +65,8 @@ public class CustomCosmetic extends Cosmetic {
 
 
         if(textureLocation != null) {
-            mc.getTextureManager().bindTexture(textureLocation.getTexture());
+       //     mc.getTextureManager().bindTexture(textureLocation.getTexture());
+            RenderSystem.setShaderTexture(0, textureLocation.getTexture());
         }
 
         try {
@@ -90,7 +92,12 @@ public class CustomCosmetic extends Cosmetic {
         }
         catch (ConcurrentModificationException ignored) {}
 
-        this.model.draw(matrices, matrix4f);
+        this.model.draw(matrices, matrix4f, textureLocation == null ? null : textureLocation.getTexture());
+    }
+
+    @Override
+    public void loadTexture() {
+
     }
 
     public void addCustomAnimation(Custom3ValueAnimation customAnimation) {

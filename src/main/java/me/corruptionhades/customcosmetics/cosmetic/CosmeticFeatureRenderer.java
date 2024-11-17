@@ -1,59 +1,70 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
+import me.corruptionhades.customcosmetics.a.objfile.AObjFile;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
-import java.text.DecimalFormat;
+import java.nio.file.Path;
 
-public class CosmeticFeatureRenderer extends FeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
+public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
 
-    private final PlayerEntityModel<?> model;
+    private final PlayerEntityModel model;
 
     public static String text = "Test";
 
-    public CosmeticFeatureRenderer(PlayerEntityModel<?> model, FeatureRendererContext<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> context) {
+    public CosmeticFeatureRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
         super(context);
-        this.model = model;
+        this.model = context.getModel();
+
+        try {
+            objFile = new AObjFile("model.obj", AObjFile.ResourceProvider.ofPath(
+                    Path.of("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/Lightning Shield Blue/")));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 
-        if(entity.isSneaking()) {
+    @Override
+    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, PlayerEntityRenderState state, float limbAngle, float limbDistance) {
+        if(state.sneaking) {
             matrices.translate(0, 0.2, 0);
         }
 
-     //   matrices.translate(-model.leftArm.roll, 0, 0);
-
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(model.leftArm.roll));
-
         for(Cosmetic cosmetic : CustomCosmeticsClient.getInstance().getCosmeticManager().getCosmetics()) {
 
+            if(cosmetic instanceof ItemCosmetic) continue;
+
+            matrices.push();
             if(cosmetic.getType() == BodyPart.LEFT_ARM) {
+                matrices.multiply(RotationAxis.POSITIVE_Z.rotation(model.leftArm.roll));
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.leftArm.pitch));
             }
             else if(cosmetic.getType() == BodyPart.RIGHT_ARM) {
+                matrices.multiply(RotationAxis.POSITIVE_Z.rotation(model.rightArm.roll));
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.rightArm.pitch));
             }
+            else if(cosmetic.getType() == BodyPart.BODY) {
+                matrices.multiply(RotationAxis.POSITIVE_Z.rotation(model.body.roll));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.body.pitch));
+            }
 
-            cosmetic.render(model, entity, matrices);
+            cosmetic.render(model, matrices);
+            matrices.pop();
+
+         //   objFile.draw(matrices, matrices.peek().getPositionMatrix(), new Vec3d(0, 0, 0));
         }
-
-        DecimalFormat df = new DecimalFormat("#.##");
-        text = df.format(model.leftArm.pitch) + ": " + df.format(model.leftArm.roll) + ", " + df.format(model.leftArm.roll);
-
-
-
-
     }
 
-
+    private AObjFile objFile;
 }

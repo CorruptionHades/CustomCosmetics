@@ -1,18 +1,17 @@
-package me.corruptionhades.customcosmetics.objfile;
+package me.corruptionhades.customcosmetics.a.objfile;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.javagl.obj.*;
+import me.corruptionhades.customcosmetics.objfile.Helper;
+import me.corruptionhades.customcosmetics.utils.CustomSounds;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.GlUsage;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.gl.VertexBuffer;
+import net.minecraft.client.gl.*;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL12;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * A wavefront obj file parser.
@@ -42,13 +40,13 @@ import java.util.function.Supplier;
  * This class uses {@link ObjReader} to read and parse .obj files. .mtl files are also handled by said library.
  * File access is managed by the {@link ResourceProvider} interface, which has the job of mapping a file name into a readable file.
  * <h2>Rendering</h2>
- * To render a loaded ObjFile, call {@link #draw(MatrixStack, Matrix4f, Identifier)}.
+ * To render a loaded ObjFile, call {@link #draw(MatrixStack, Matrix4f, Vec3d)}.
  */
-public class ObjFile implements Closeable {
-	private final ResourceProvider provider;
-	private final String name;
+public class AObjFile implements Closeable {
 	final Map<Obj, VertexBuffer> buffers = new HashMap<>();
 	final Map<String, Identifier> boundTextures = new HashMap<>();
+	private final ResourceProvider provider;
+	private final String name;
 	Map<String, Obj> materialNameObjMap;
 	private List<Mtl> allMaterials;
 	private boolean baked = false;
@@ -61,7 +59,7 @@ public class ObjFile implements Closeable {
 	 * @param provider The resource provider to use
 	 * @throws IOException When reading the .obj fails
 	 */
-	public ObjFile(String name, ResourceProvider provider) throws IOException {
+	public AObjFile(String name, ResourceProvider provider) throws IOException {
 		this.name = name;
 		this.provider = provider;
 		read();
@@ -84,20 +82,14 @@ public class ObjFile implements Closeable {
 				}
 			}
 			materialNameObjMap = ObjSplitting.splitByMaterialGroups(r);
+
 		}
 	}
 
-	private Identifier createTex0(String path) {
-		try (InputStream reader = this.provider.open(path)) {
+	private Identifier createTex0(String s) {
+		try (InputStream reader = this.provider.open(s)) {
 			Identifier identifier = Helper.randomIdentifier();
 			BufferedImage read1 = ImageIO.read(reader);
-
-			if(read1 == null) {
-				System.out.println("read1 is null: " + path);
-				identifier = Identifier.of("renderer", "texture.png");
-				return identifier;
-			}
-
 			Helper.registerBufferedImageTexture(identifier, read1);
 			return identifier;
 		} catch (IOException e) {
@@ -105,19 +97,15 @@ public class ObjFile implements Closeable {
 		}
 	}
 
-	private void bake(@Nullable Identifier texture) {
+	private void bake() {
 		for (Map.Entry<String, Obj> stringObjEntry : materialNameObjMap.entrySet()) {
 			String materialName = stringObjEntry.getKey();
 			Obj objToDraw = stringObjEntry.getValue();
-
 			Mtl material = allMaterials.stream().filter(f -> f.getName().equals(materialName)).findFirst().orElse(null);
 			boolean hasTexture = material != null && material.getMapKd() != null;
 			if (hasTexture) {
 				String mapKd = material.getMapKd();
 				boundTextures.computeIfAbsent(mapKd, this::createTex0);
-			}
-			if(texture != null) {
-				boundTextures.put(texture.getPath(), texture);
 			}
 			VertexFormat vmf;
 			if (material != null) {
@@ -158,69 +146,70 @@ public class ObjFile implements Closeable {
 						FloatTuple normals = objToDraw.getNormal(face.getNormalIndex(i1));
 						vertex.normal(normals.getX(), normals.getY(), normals.getZ());
 					}
-			//		vertex.next();
 				}
 			}
 			BuiltBuffer end = b.end();
-			buffers.put(objToDraw, Helper.createVbo(end, GlUsage.DYNAMIC_READ));
+			buffers.put(objToDraw, Helper.createVbo(end, GlUsage.DYNAMIC_WRITE));
 		}
 		baked = true;
 	}
 
 	/**
-	 * Draws this ObjFile. Calls {@link #bake(Identifier)} )} if necessary.
+	 * Draws this ObjFile. Calls {@link #bake()} if necessary.
 	 *
 	 * @param stack      MatrixStack
 	 * @param viewMatrix View matrix to apply to this ObjFile, independent of any other matrix.
+	 * @param origin     Origin point to draw at
 	 */
-	public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable Identifier texture) {
+	public void draw(MatrixStack stack, Matrix4f viewMatrix, Vec3d origin) {
 		if (closed) {
 			throw new IllegalStateException("Closed");
 		}
 		if (!baked) {
-			bake(texture);
+			bake();
 		}
+		Vec3d o = transformVec3d(origin);
 		Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
 		Matrix4f m4f = new Matrix4f(stack.peek().getPositionMatrix());
-		//m4f.translate((float) o.x, (float) o.y, (float) o.z);
+		m4f.translate((float) o.x, (float) o.y, (float) o.z);
 		m4f.mul(viewMatrix);
 
-		Helper.setupRender();
-		RenderSystem.enableCull();
+		//if (!RendererUtils.isSkipSetup()) {
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+			RenderSystem.enableDepthTest();
+			RenderSystem.depthFunc(GL12.GL_LEQUAL);
+			RenderSystem.enableCull();
+		//}
 
 		for (Map.Entry<String, Obj> stringObjEntry : materialNameObjMap.entrySet()) {
 			String materialName = stringObjEntry.getKey();
 			Obj obj = stringObjEntry.getValue();
 			Mtl material = allMaterials.stream().filter(f -> f.getName().equals(materialName)).findFirst().orElse(null);
 			boolean hasTexture = material != null && material.getMapKd() != null;
-
-			if(texture != null) {
-				RenderSystem.setShaderTexture(0, texture);
-				hasTexture = true;
-			}
-			else if (hasTexture) {
+			if (hasTexture) {
 				String mapKd = material.getMapKd();
 				Identifier identifier = boundTextures.get(mapKd);
 				RenderSystem.setShaderTexture(0, identifier);
 			}
-			Supplier<ShaderProgram> shader;
-			if (material != null || texture != null) {
-				if(hasTexture) {
-				//	RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR_NORMAL);
+			if (material != null) {
+				if (hasTexture) {
+					RenderSystem.setShader(CustomSounds.SPK_POSITION_TEX_COLOR_NORMAL);
 				} else {
 					RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 				}
-				//shader = hasTexture ? ShaderManager::getPositionTexColorNormalProgram : GameRenderer::getPositionColorProgram;
 			} else {
 				RenderSystem.setShader(ShaderProgramKeys.POSITION);
 			}
-
 			VertexBuffer vertexBuffer = buffers.get(obj);
 			vertexBuffer.bind();
 			vertexBuffer.draw(m4f, projectionMatrix, RenderSystem.getShader());
 		}
 		VertexBuffer.unbind();
-		Helper.endRender();
+	//	if (!RendererUtils.isSkipSetup()) {
+			RenderSystem.disableBlend();
+	//	}
 	}
 
 	/**

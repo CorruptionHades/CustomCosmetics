@@ -112,7 +112,8 @@ public class MainScreen extends Screen implements IMinecraftInstance {
                 infoText = "Importing Model...";
                 //  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-                customCosmetic = new CustomCosmetic(nameField.getText(), BodyPart.valueOf(bodyPart.getSelectedOption().toUpperCase().replace(" ", "_")));
+                customCosmetic = new CustomCosmetic(
+                        nameField.getText(), BodyPart.valueOf(bodyPart.getSelectedOption().toUpperCase().replace(" ", "_")), false);
 
                 File path = new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/Lightning Shield Blue/roundshield.obj");
                 System.out.println(path.getAbsolutePath());
@@ -226,7 +227,7 @@ public class MainScreen extends Screen implements IMinecraftInstance {
         guiUtils.drawRoundedRect(context, playerX - offset, posY + (45 * sf), playerX + offset, posY + height - (30 * sf), 20, dGreen.getRGB());
 
       //  RenderUtils.drawEntityOnScreen(playerX, (int) posY + 260, 90, modelRotateX, 180, mc.thePlayer);
-        InventoryScreen.drawEntity(context, (int) ((posX + 485 * sf) / sf), (int) ((posY + 260 * sf) / sf), 90,
+        InventoryScreen.drawEntity(context, (int) ((posX + 485 * sf) / sf), (int) ((posY + 260 * sf) / sf), (int) ((posX + 485 * sf) / sf), (int) ((posY + 260 * sf) / sf), 90, 0,
                 0, 0,
                 mc.player);
 
@@ -367,13 +368,14 @@ public class MainScreen extends Screen implements IMinecraftInstance {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         try {
-            customAnimationScreen.handleMouseInput(amount);
+            customAnimationScreen.handleMouseInput(verticalAmount);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
+
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
   /*  private void importSingleTexture() {

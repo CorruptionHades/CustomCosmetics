@@ -2,6 +2,7 @@ package me.corruptionhades.customcosmetics.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,15 +40,15 @@ public class RenderUtils implements IMinecraftInstance {
         float g = (float) (color >> 16 & 0xFF) / 255.0f;
         float h = (float) (color >> 8 & 0xFF) / 255.0f;
         float j = (float) (color & 0xFF) / 255.0f;
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0f).color(g, h, j, f).next();
-        bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0f).color(g, h, j, f).next();
-        bufferBuilder.vertex(matrix, (float) x2, (float) y1, 0.0f).color(g, h, j, f).next();
-        bufferBuilder.vertex(matrix, (float) x1, (float) y1, 0.0f).color(g, h, j, f).next();
+
+       // RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0f).color(g, h, j, f);
+        bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0f).color(g, h, j, f);
+        bufferBuilder.vertex(matrix, (float) x2, (float) y1, 0.0f).color(g, h, j, f);
+        bufferBuilder.vertex(matrix, (float) x1, (float) y1, 0.0f).color(g, h, j, f);
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
         RenderSystem.disableBlend();
     }
@@ -70,7 +71,7 @@ public class RenderUtils implements IMinecraftInstance {
         float h = (float) (color >> 8 & 255) / 255.0F;
         float k = (float) (color & 255) / 255.0F;
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+       // RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
         renderRoundedQuadInternal(matrix, g, h, k, f, fromX, fromY, toX, toY, rad, samples);
         
@@ -79,8 +80,7 @@ public class RenderUtils implements IMinecraftInstance {
     }
 
     public static void renderRoundedQuadInternal(Matrix4f matrix, float cr, float cg, float cb, float ca, double fromX, double fromY, double toX, double toY, double rad, double samples) {
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 
         double toX1 = toX - rad;
         double toY1 = toY - rad;
@@ -93,7 +93,7 @@ public class RenderUtils implements IMinecraftInstance {
                 float rad1 = (float) Math.toRadians(r);
                 float sin = (float) (Math.sin(rad1) * rad);
                 float cos = (float) (Math.cos(rad1) * rad);
-                bufferBuilder.vertex(matrix, (float) current[0] + sin, (float) current[1] + cos, 0.0F).color(cr, cg, cb, ca).next();
+                bufferBuilder.vertex(matrix, (float) current[0] + sin, (float) current[1] + cos, 0.0F).color(cr, cg, cb, ca);
             }
         }
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
@@ -123,16 +123,15 @@ public class RenderUtils implements IMinecraftInstance {
         float blue = (float) (color & 255) / 255.0F;
         RenderSystem.enableBlend();
         
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+      //  RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         Matrix4f matrix = matrices.peek().getPositionMatrix();
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 
         for (double r = 0; r < 360; r += (360 / samples)) {
             float rad1 = (float) Math.toRadians(r);
             float sin = (float) (Math.sin(rad1) * radius);
             float cos = (float) (Math.cos(rad1) * radius);
-            bufferBuilder.vertex(matrix, (float) centerX + sin, (float) centerY + cos, 0.0F).color(red, green, blue, alpha).next();
+            bufferBuilder.vertex(matrix, (float) centerX + sin, (float) centerY + cos, 0.0F).color(red, green, blue, alpha);
         }
 
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
@@ -206,7 +205,8 @@ public class RenderUtils implements IMinecraftInstance {
             }
 
             BufferedImage image = ImageIO.read(url);
-            context.drawTexture(new Identifier("customcosmetics", path), (int) x, (int) y, 0.0f, 0.0f, image.getWidth(), image.getHeight(), image.getWidth(), image.getHeight());
+            context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("customcosmetics", path),
+                    (int) x, (int) y, 0.0f, 0.0f, image.getWidth(), image.getHeight(), image.getWidth(), image.getHeight(), image.getWidth(), image.getHeight());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -228,14 +228,14 @@ public class RenderUtils implements IMinecraftInstance {
                 return;
             }
 
-            Identifier id = new Identifier("customcosmetics", path);
+            Identifier id = Identifier.of("customcosmetics", path);
 
             int width = 0;
             int height = 0;
 
-            if(!imageCache.containsKey(new Identifier("customcosmetics", path))) {
+            if(!imageCache.containsKey(Identifier.of("customcosmetics", path))) {
                 BufferedImage image = ImageIO.read(url);
-                imageCache.put(new Identifier("customcosmetics", path), image);
+                imageCache.put(Identifier.of("customcosmetics", path), image);
                 width = image.getWidth();
                 height = image.getHeight();
             }
@@ -248,7 +248,7 @@ public class RenderUtils implements IMinecraftInstance {
             // Get dimensions of image
 
             // Draw the image
-            context.drawTexture(id, (int) (x / scale), (int) (y / scale), 0.0f, 0.0f, width, height, width, height);
+            context.drawTexture(RenderLayer::getGuiTextured, id, (int) (x / scale), (int) (y / scale), 0.0f, 0.0f, width, height, width, height);
             matrices.pop();
         }
         catch (Exception e) {
