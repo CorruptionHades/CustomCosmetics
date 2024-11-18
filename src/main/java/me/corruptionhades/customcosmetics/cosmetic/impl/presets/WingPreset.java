@@ -74,7 +74,7 @@ public class WingPreset extends Cosmetic {
 
             matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
-            obj.draw(matrices, matrix, crl.getTexture());
+            obj.draw(matrices, matrix, crl);
 
             Matrix4f matrix2 = new Matrix4f();
 

@@ -67,7 +67,11 @@ public class TextureUtil {
             File[] listFiles = texturePath.listFiles();
 
             if (listFiles == null) {
-                return null;
+
+                Identifier ident = saveBufferedImageAsIdentifier(texturePath);
+
+                crl = new CustomResourceLocation(false, ident);
+                return crl;
             }
 
             for (File file : listFiles) {

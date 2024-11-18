@@ -60,7 +60,8 @@ public class TextureObjFile implements Closeable {
         try (InputStream reader = provider.open(name)) {
             Obj obj = ObjUtils.convertToRenderable(ObjReader.read(reader));
 
-            BufferBuilder builder = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
+            BufferBuilder builder = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLES,
+                    VertexFormats.POSITION_TEXTURE_COLOR);
 
             for (int i = 0; i < obj.getNumFaces(); i++) {
                 ObjFace face = obj.getFace(i);
@@ -81,13 +82,13 @@ public class TextureObjFile implements Closeable {
 
                     vertexConsumer.color(1f, 1f, 1f, 1f);
 
-                    if (hasNormals) {
+               /*     if (hasNormals) {
                         FloatTuple normal = obj.getNormal(face.getNormalIndex(j));
                         vertexConsumer.normal(normal.getX(), normal.getY(), normal.getZ());
                     }
                     else {
                         vertexConsumer.normal(0, 0, 0);
-                    }
+                    } */
 
                     //vertexConsumer.color(1f, 1f, 1f, 1f); // Default white color
              //       vertexConsumer.next();
@@ -126,14 +127,17 @@ public class TextureObjFile implements Closeable {
             }
         }
 
+     //   stack.multiply(MinecraftClient.getInstance().getEntityRenderDispatcher().getRotation());
+
         Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
         Matrix4f modelMatrix = new Matrix4f(stack.peek().getPositionMatrix());
 
-        modelMatrix.mul(viewMatrix);
+        modelMatrix.mul(viewMatrix).sub(MinecraftClient.getInstance().getEntityRenderDispatcher().);
 
         Helper.setupRender();
 
-        RenderSystem.setShader(CustomSounds.SPK_POSITION_TEX_COLOR_NORMAL);
+       // RenderSystem.setShader(CustomSounds.SPK_POSITION_TEX_COLOR_NORMAL);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
         if (textureIdentifier != null) {
             RenderSystem.setShaderTexture(0, textureIdentifier);
         }
@@ -141,12 +145,16 @@ public class TextureObjFile implements Closeable {
         for (Map.Entry<Obj, VertexBuffer> entry : buffers.entrySet()) {
             VertexBuffer vbo = entry.getValue();
             vbo.bind();
+          //  vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
+
+            // instead of model matrix pass an identity matrix
             vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
         }
 
         VertexBuffer.unbind();
         Helper.endRender();
     }
+
     private Identifier loadTexture(Path texturePath) {
         try (InputStream stream = Files.newInputStream(texturePath)) {
             BufferedImage image = ImageIO.read(stream);
