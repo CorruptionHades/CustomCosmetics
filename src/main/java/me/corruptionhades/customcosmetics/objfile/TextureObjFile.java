@@ -1,9 +1,11 @@
 package me.corruptionhades.customcosmetics.objfile;
 
+import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.javagl.obj.*;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
 import me.corruptionhades.customcosmetics.utils.CustomSounds;
+import me.corruptionhades.customcosmetics.utils.RenderRefs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.ShaderProgram;
@@ -127,16 +129,13 @@ public class TextureObjFile implements Closeable {
             }
         }
 
-     //   stack.multiply(MinecraftClient.getInstance().getEntityRenderDispatcher().getRotation());
-
         Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
         Matrix4f modelMatrix = new Matrix4f(stack.peek().getPositionMatrix());
 
-        modelMatrix.mul(viewMatrix).sub(MinecraftClient.getInstance().getEntityRenderDispatcher().);
+        modelMatrix.mul(viewMatrix);
 
         Helper.setupRender();
 
-       // RenderSystem.setShader(CustomSounds.SPK_POSITION_TEX_COLOR_NORMAL);
         RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
         if (textureIdentifier != null) {
             RenderSystem.setShaderTexture(0, textureIdentifier);
@@ -145,14 +144,26 @@ public class TextureObjFile implements Closeable {
         for (Map.Entry<Obj, VertexBuffer> entry : buffers.entrySet()) {
             VertexBuffer vbo = entry.getValue();
             vbo.bind();
-          //  vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
-
-            // instead of model matrix pass an identity matrix
             vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
         }
 
         VertexBuffer.unbind();
         Helper.endRender();
+    }
+
+    private Matrix4f getCameraRotationMatrix() {
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        Matrix4f rotationMatrix = new Matrix4f();
+
+        // Fetch camera rotation as a quaternion
+        float pitch = camera.getPitch();
+        float yaw = camera.getYaw();
+
+        // Apply rotations (order matters: yaw first, then pitch)
+      //  rotationMatrix.rotateY((float) Math.toRadians(-yaw)); // Negate to align with view
+     //   rotationMatrix.rotateX((float) Math.toRadians(-pitch));
+
+        return rotationMatrix;
     }
 
     private Identifier loadTexture(Path texturePath) {

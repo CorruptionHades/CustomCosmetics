@@ -19,14 +19,18 @@ public class CosmeticManager {
 
     public void init() {
      //   registerCosmetic(new Test());
-        registerCosmetic(new WingPreset("angel_wings", BodyPart.BODY,
+     /*   registerCosmetic(new WingPreset("angel_wings", BodyPart.BODY,
                 new File("/home/mitarbeiter/Downloads/angel_wings.obj"),
-                new File("/home/mitarbeiter/Downloads/wing_6.png")));
+                new File("/home/mitarbeiter/Downloads/wing_6.png"))); */
 
-        
+        registerCosmetic(new WingPreset("wichtiger_dark_wings", BodyPart.BODY,
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/wichtiger.obj"),
+                new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/frames/")));
+
+
         // /home/mitarbeiter/Downloads
 
-      /*  registerCosmetic(new SwordPreset(
+        registerCosmetic(new SwordPreset(
                 "obsidian_sword", new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/dragon_sword_ob.obj"),
                 new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/frames")
         ));
@@ -35,7 +39,7 @@ public class CosmeticManager {
                 "no_risk_black_shield",
                 new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/roundshield.obj"),
                 new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/frames/")
-        )); */
+        ));
     }
 
     public void registerCosmetic(Cosmetic cosmetic) {
