@@ -24,6 +24,8 @@ public class CustomCosmeticsClient implements net.fabricmc.api.ClientModInitiali
 
     private CosmeticManager cosmeticManager;
 
+    public AObjFile blub;
+
     @Override
     public void onInitializeClient() {
         instance = this;
@@ -31,19 +33,19 @@ public class CustomCosmeticsClient implements net.fabricmc.api.ClientModInitiali
 
         Registry.register(Registries.SOUND_EVENT, CustomSounds.PING, CustomSounds.PING_EVENT);
 
-       /* try {
-            AObjFile blub = new AObjFile("angel_wings.obj", AObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/")));
-
-            WorldRenderEvents.END.register(worldRenderContext -> {
-                blub.draw(worldRenderContext.matrixStack(), worldRenderContext.projectionMatrix(), new Vec3d(0, 200, 0));
+        try {
+            blub = new AObjFile("angel_wings.obj", AObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/")));
+            WorldRenderEvents.AFTER_ENTITIES.register(worldRenderContext -> {
+              //  blub.draw(worldRenderContext.matrixStack(), worldRenderContext.projectionMatrix(), new Vec3d(0, 200, 0));
             });
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } */
+        }
 
-        WorldRenderEvents.END.register(worldRenderContext -> {
+        WorldRenderEvents.LAST.register(worldRenderContext -> {
      //       RenderRefs.projectionMatrix = worldRenderContext.projectionMatrix();
        //     RenderRefs.positionMatrix = worldRenderContext.positionMatrix();
+            RenderRefs.cameraPos = worldRenderContext.camera().getPos();
         });
 
         new Thread(() -> {

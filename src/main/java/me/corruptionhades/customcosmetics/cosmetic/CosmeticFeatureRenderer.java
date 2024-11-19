@@ -2,16 +2,21 @@ package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
 import me.corruptionhades.customcosmetics.a.objfile.AObjFile;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.nio.file.Path;
 
@@ -24,14 +29,6 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
     public CosmeticFeatureRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
         super(context);
         this.model = context.getModel();
-
-        try {
-            objFile = new AObjFile("model.obj", AObjFile.ResourceProvider.ofPath(
-                    Path.of("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/Lightning Shield Blue/")));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -61,10 +58,19 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
 
             cosmetic.render(model, matrices);
             matrices.pop();
-
-         //   objFile.draw(matrices, matrices.peek().getPositionMatrix(), new Vec3d(0, 0, 0));
         }
-    }
 
-    private AObjFile objFile;
+        // test cosmetic
+        matrices.push();
+
+        // Translate to center above the player's head
+        matrices.translate(-0.5F, -state.height + 0.25F, -0.5F);
+        // Render a diamond block above the player's head
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(
+                Blocks.DIAMOND_BLOCK.getDefaultState(), matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
+
+        matrices.pop();
+
+   //     CustomCosmeticsClient.getInstance().blub.draw(matrices, new Matrix4f(), new Vec3d(state.x, state.y, state.z));
+    }
 }

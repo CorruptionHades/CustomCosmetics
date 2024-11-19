@@ -1,19 +1,19 @@
 package me.corruptionhades.customcosmetics.objfile;
 
-import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.javagl.obj.*;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
-import me.corruptionhades.customcosmetics.utils.CustomSounds;
+import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
+import me.corruptionhades.customcosmetics.utils.FastMStack;
 import me.corruptionhades.customcosmetics.utils.RenderRefs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUsage;
-import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -26,12 +26,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * A wavefront obj file parser and renderer with explicit texture management.
  */
-public class TextureObjFile implements Closeable {
+public class TextureObjFile implements Closeable, IMinecraftInstance {
     private final ResourceProvider provider;
     private final String name;
     private final Map<Obj, VertexBuffer> buffers = new HashMap<>();
@@ -72,6 +71,12 @@ public class TextureObjFile implements Closeable {
 
                 for (int j = 0; j < face.getNumVertices(); j++) {
                     FloatTuple vertex = obj.getVertex(face.getVertexIndex(j));
+                    
+                    Vec3d cam = RenderRefs.cameraPos;
+                    if(cam == null) {
+                        cam = new Vec3d(0, 0, 0);
+                    }
+                    
                     VertexConsumer vertexConsumer = builder.vertex(vertex.getX(), vertex.getY(), vertex.getZ());
 
                     if (hasUV) {
@@ -96,6 +101,7 @@ public class TextureObjFile implements Closeable {
              //       vertexConsumer.next();
                 }
             }
+
 
             BuiltBuffer builtBuffer = builder.end();
             VertexBuffer vbo = Helper.createVbo(builtBuffer, GlUsage.DYNAMIC_WRITE);
@@ -130,6 +136,10 @@ public class TextureObjFile implements Closeable {
         }
 
         Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
+
+        MatrixStack matrices = new FastMStack();
+        matrices.multiplyPositionMatrix(RenderRefs.positionMatrix);
+
         Matrix4f modelMatrix = new Matrix4f(stack.peek().getPositionMatrix());
 
         modelMatrix.mul(viewMatrix);
