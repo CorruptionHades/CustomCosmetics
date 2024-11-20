@@ -2,6 +2,7 @@ package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
 import me.corruptionhades.customcosmetics.a.objfile.AObjFile;
+import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
@@ -29,6 +31,14 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
     public CosmeticFeatureRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
         super(context);
         this.model = context.getModel();
+
+        try {
+            objj = new TextureObjFile(
+"angel_wings.obj", TextureObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/"))
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -60,17 +70,8 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
             matrices.pop();
         }
 
-        // test cosmetic
-        matrices.push();
-
-        // Translate to center above the player's head
-        matrices.translate(-0.5F, -state.height + 0.25F, -0.5F);
-        // Render a diamond block above the player's head
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(
-                Blocks.DIAMOND_BLOCK.getDefaultState(), matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
-
-        matrices.pop();
-
-   //     CustomCosmeticsClient.getInstance().blub.draw(matrices, new Matrix4f(), new Vec3d(state.x, state.y, state.z));
+        objj.rendur(matrices, vertexConsumers, light, state, limbAngle, limbDistance);
     }
+
+    private TextureObjFile objj;
 }

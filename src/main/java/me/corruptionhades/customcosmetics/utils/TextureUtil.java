@@ -71,6 +71,7 @@ public class TextureUtil {
                 Identifier ident = saveBufferedImageAsIdentifier(texturePath);
 
                 crl = new CustomResourceLocation(false, ident);
+                crls.add(crl);
                 return crl;
             }
 
@@ -85,6 +86,12 @@ public class TextureUtil {
             e.printStackTrace();
         }
 
+        if(crl != null) {
+            crls.add(crl);
+        }
+
         return crl;
     }
+
+    public static List<CustomResourceLocation> crls = new ArrayList<>();
 }

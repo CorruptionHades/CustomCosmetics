@@ -6,11 +6,13 @@ import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
 import me.corruptionhades.customcosmetics.utils.FastMStack;
 import me.corruptionhades.customcosmetics.utils.RenderRefs;
+import me.corruptionhades.customcosmetics.utils.TextureUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -37,6 +39,8 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
     private boolean baked = false;
     private boolean closed = false;
 
+    private final Obj readObj;
+
     /**
      * Creates a new ObjFile
      *
@@ -47,6 +51,7 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
     public TextureObjFile(String name, ResourceProvider provider) throws IOException {
         this.name = name;
         this.provider = provider;
+        this.readObj = ObjUtils.convertToRenderable(ObjReader.read(provider.open(name)));
       //  bake();
     }
 
@@ -71,12 +76,6 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
 
                 for (int j = 0; j < face.getNumVertices(); j++) {
                     FloatTuple vertex = obj.getVertex(face.getVertexIndex(j));
-                    
-                    Vec3d cam = RenderRefs.cameraPos;
-                    if(cam == null) {
-                        cam = new Vec3d(0, 0, 0);
-                    }
-                    
                     VertexConsumer vertexConsumer = builder.vertex(vertex.getX(), vertex.getY(), vertex.getZ());
 
                     if (hasUV) {
@@ -111,6 +110,35 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         baked = true;
     }
 
+    public void rendur(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
+                       PlayerEntityRenderState state, float limbAngle, float limbDistance) {
+        Identifier ident = TextureUtil.crls.get(0).getTexture();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(ident));
+        RenderSystem.setShaderTexture(0, ident);
+
+        Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+
+        for (int i = 0; i < readObj.getNumFaces(); i++) {
+            ObjFace face = readObj.getFace(i);
+            boolean hasUV = face.containsTexCoordIndices();
+
+            for (int j = 0; j < face.getNumVertices(); j++) {
+                FloatTuple vertex = readObj.getVertex(face.getVertexIndex(j));
+                float x = (float) (vertex.getX() - cameraPos.x);
+                float y = (float) (vertex.getY() - cameraPos.y);
+                float z = (float) (vertex.getZ() - cameraPos.z);
+
+                vertexConsumer.vertex(positionMatrix, x, y, z)
+                        .color(1, 1, 1, 1)
+                        .texture(hasUV ? readObj.getTexCoord(face.getTexCoordIndex(j)).getX() : 0, hasUV ? 1 - readObj.getTexCoord(face.getTexCoordIndex(j)).getY() : 0)
+                        .overlay(OverlayTexture.DEFAULT_UV)
+                        .light(light)
+                        .normal(0, 1, 0);
+            }
+        }
+    }
+
     public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable CustomResourceLocation crl) {
         draw(stack, viewMatrix, crl == null ? null : crl.getTexture());
     }
@@ -142,7 +170,13 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
 
         Matrix4f modelMatrix = new Matrix4f(stack.peek().getPositionMatrix());
 
+
+
         modelMatrix.mul(viewMatrix);
+        modelMatrix.mul(RenderSystem.getModelViewStack());
+
+        // funi
+//        projectionMatrix.add(getCameraRotationMatrix());
 
         Helper.setupRender();
 
@@ -154,6 +188,7 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         for (Map.Entry<Obj, VertexBuffer> entry : buffers.entrySet()) {
             VertexBuffer vbo = entry.getValue();
             vbo.bind();
+          //  vbo.draw();
             vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
         }
 
@@ -170,26 +205,10 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         float yaw = camera.getYaw();
 
         // Apply rotations (order matters: yaw first, then pitch)
-      //  rotationMatrix.rotateY((float) Math.toRadians(-yaw)); // Negate to align with view
-     //   rotationMatrix.rotateX((float) Math.toRadians(-pitch));
+        rotationMatrix.rotateY((float) Math.toRadians(-yaw)); // Negate to align with view
+        rotationMatrix.rotateX((float) Math.toRadians(-pitch));
 
         return rotationMatrix;
-    }
-
-    private Identifier loadTexture(Path texturePath) {
-        try (InputStream stream = Files.newInputStream(texturePath)) {
-            BufferedImage image = ImageIO.read(stream);
-            if (image == null) {
-                throw new IllegalArgumentException("Invalid image file: " + texturePath);
-            }
-
-            Identifier textureId = Helper.randomIdentifier();
-            Helper.registerBufferedImageTexture(textureId, image);
-            return textureId;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Identifier.of("minecraft", "textures/missingno.png");
-        }
     }
 
     @Override

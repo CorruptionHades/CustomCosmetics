@@ -72,7 +72,7 @@ public class WingPreset extends Cosmetic {
             matrix.scale(scale, -scale, scale);
             matrix.translate(0, yOff, zOff);
 
-            matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
+         //   matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
             obj.draw(matrices, matrix, crl);
 
@@ -82,7 +82,7 @@ public class WingPreset extends Cosmetic {
             matrix2.scale(-scale, -scale, scale);
             matrix2.translate(0, yOff, zOff);
 
-            matrix2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
+       //     matrix2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
             obj.draw(matrices, matrix2, crl);
         }
