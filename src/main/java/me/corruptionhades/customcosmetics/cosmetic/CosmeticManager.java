@@ -2,11 +2,13 @@ package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.BandanaPreset;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.CapePreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.WingPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.ShieldPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.SwordPreset;
 import me.corruptionhades.customcosmetics.utils.TesterUtil;
 import net.minecraft.item.Items;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,6 +75,10 @@ public class CosmeticManager {
                     new File(path + "/bandana/bandana.obj"),
                     new File(path + "/bandana/frames/")
             ));
+
+            registerCosmetic(new CapePreset("cape",
+                    new File(path + "/cape.png")
+            ));
         }
 
 
@@ -108,5 +114,14 @@ public class CosmeticManager {
             }
         }
         return itemCosmetics;
+    }
+
+    public @Nullable CapePreset getCapeCosmetic() {
+        for(Cosmetic cosmetic : cosmetics) {
+            if(cosmetic instanceof CapePreset) {
+                return (CapePreset) cosmetic;
+            }
+        }
+        return null;
     }
 }

@@ -4,6 +4,7 @@
   "package": "me.corruptionhades.customcosmetics.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "CapeFeatureRendererMixin",
     "GameRendererMixin",
     "InGameHudMixin",
     "ItemRendererMixin",
