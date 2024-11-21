@@ -1,26 +1,13 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
-import me.corruptionhades.customcosmetics.a.objfile.AObjFile;
-import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
 
@@ -31,15 +18,7 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
     public CosmeticFeatureRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
         super(context);
         this.model = context.getModel();
-
-        try {
-            objj = new AObjFile("angel_wings.obj", AObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/"))
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
-
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, PlayerEntityRenderState state, float limbAngle, float limbDistance) {
@@ -69,6 +48,4 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
             matrices.pop();
         }
     }
-
-    private AObjFile objj;
 }

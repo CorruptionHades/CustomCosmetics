@@ -10,8 +10,7 @@
     "KeyboardMixin",
     "MinecraftClientMixin",
     "PlayerEntityRendererMixin",
-    "ShieldEntityModelMixin",
-    "WorldRendererMixin"
+    "ShieldEntityModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

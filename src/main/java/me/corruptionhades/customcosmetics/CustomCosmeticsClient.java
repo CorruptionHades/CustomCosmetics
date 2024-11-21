@@ -1,21 +1,12 @@
 package me.corruptionhades.customcosmetics;
 
-import me.corruptionhades.customcosmetics.a.objfile.AObjFile;
 import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.CosmeticManager;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
 import me.corruptionhades.customcosmetics.utils.CustomSounds;
-import me.corruptionhades.customcosmetics.utils.RenderRefs;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 @net.fabricmc.api.Environment(net.fabricmc.api.EnvType.CLIENT)
 public class CustomCosmeticsClient implements net.fabricmc.api.ClientModInitializer, IMinecraftInstance {
@@ -24,29 +15,12 @@ public class CustomCosmeticsClient implements net.fabricmc.api.ClientModInitiali
 
     private CosmeticManager cosmeticManager;
 
-    public AObjFile blub;
-
     @Override
     public void onInitializeClient() {
         instance = this;
         cosmeticManager = new CosmeticManager();
 
         Registry.register(Registries.SOUND_EVENT, CustomSounds.PING, CustomSounds.PING_EVENT);
-
-        try {
-            blub = new AObjFile("angel_wings.obj", AObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/")));
-            WorldRenderEvents.AFTER_ENTITIES.register(worldRenderContext -> {
-              //  blub.draw(worldRenderContext.matrixStack(), worldRenderContext.projectionMatrix(), new Vec3d(0, 200, 0));
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        WorldRenderEvents.LAST.register(worldRenderContext -> {
-     //       RenderRefs.projectionMatrix = worldRenderContext.projectionMatrix();
-       //     RenderRefs.positionMatrix = worldRenderContext.positionMatrix();
-            RenderRefs.cameraPos = worldRenderContext.camera().getPos();
-        });
 
         new Thread(() -> {
             try {
@@ -84,7 +58,6 @@ public class CustomCosmeticsClient implements net.fabricmc.api.ClientModInitiali
     }
 
     public static void open() {
-
       /*  MinecraftClient.getInstance().setScreen(new Screen(Text.of("<vdxhrt")) {
 
             double moveX = 0, moveY = 0;

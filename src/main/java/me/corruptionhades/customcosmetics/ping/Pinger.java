@@ -187,8 +187,6 @@ public class Pinger {
                 else if(ping.particle != null) {
                     context.drawTexture(RenderLayer::getGuiTextured, ping.particle, (int) (position.x - size / 2),
                             (int) (position.y - size / 2), 0, 0, (int) size, (int) size, (int) size, (int) size, 0xFFFFF);
-
-
                 }
                 else {
                     // light blue
