@@ -2,7 +2,7 @@ package me.corruptionhades.customcosmetics.ui.comp.impl;
 
 import me.corruptionhades.customcosmetics.ui.comp.Callback;
 import me.corruptionhades.customcosmetics.ui.comp.Preset;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
 

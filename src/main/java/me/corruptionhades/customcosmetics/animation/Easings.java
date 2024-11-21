@@ -74,15 +74,16 @@ public class Easings {
 	public static float easeInOutElastic(float x) {
 		if (x <= 0) return 0;
 		if (x >= 1) return 1;
-		return (float) (x < 0.5 ? -(pow(2, 20 * x - 10) * sin((20 * x - 11.125) * ((2 * PI) / 4.5))) / 2 : (pow(2, -20 * x + 10) * sin((20 * x - 11.125) * ((2 * PI) / 4.5))) / 2 + 1);
+		double sinCalc = sin((20 * x - 11.125) * ((2 * PI) / 4.5));
+		return (float) (x < 0.5 ? -(pow(2, 20 * x - 10) * sinCalc) / 2 : (pow(2, -20 * x + 10) * sinCalc) / 2 + 1);
 	}
 
 	public static float easeInQuad(float x) {
-		return (float) (x * x);
+		return x * x;
 	}
 
 	public static float easeOutQuad(float x) {
-		return (float) (1 - (1 - x) * (1 - x));
+		return 1 - (1 - x) * (1 - x);
 	}
 
 	public static float easeInOutQuad(float x) {
@@ -90,7 +91,7 @@ public class Easings {
 	}
 
 	public static float easeInQuart(float x) {
-		return (float) (x * x * x * x);
+		return x * x * x * x;
 	}
 
 	public static float easeOutQuart(float x) {
@@ -115,7 +116,7 @@ public class Easings {
 	
 	public static float easeInBack(float x) {
 		float c1 = 1.70158F;
-		return (float) ((c1 + 1) * x * x * x - c1 * x * x);
+		return (c1 + 1) * x * x * x - c1 * x * x;
 	}
 	
 	public static float easeOutBack(float x) {
@@ -141,11 +142,11 @@ public class Easings {
 		if (x < 1 / d1) {
 		    return n1 * x * x;
 		} else if (x < 2 / d1) {
-		    return (float) (n1 * (x -= 1.5 / d1) * x + 0.75);
+		    return (float) (n1 * (x -= (float) (1.5 / d1)) * x + 0.75);
 		} else if (x < 2.5 / d1) {
-		    return (float) (n1 * (x -= 2.25 / d1) * x + 0.9375);
+		    return (float) (n1 * (x -= (float) (2.25 / d1)) * x + 0.9375);
 		} else {
-		    return (float) (n1 * (x -= 2.625 / d1) * x + 0.984375);
+		    return (float) (n1 * (x -= (float) (2.625 / d1)) * x + 0.984375);
 		}
 	}
 	
@@ -156,72 +157,38 @@ public class Easings {
 	public static float getEasingValue(float x, Easing easing) {
 		if (x <= 0) return 0;
 		if (x >= 1) return 1;
-		switch (easing) {
-		case LINEAR:
-			return linear(x);
-		case EASE_IN_SINE:
-			return easeInSine(x);
-		case EASE_OUT_SINE:
-			return easeOutSine(x);
-		case EASE_IN_OUT_SINE:
-			return easeInOutSine(x);
-		case EASE_IN_CUBIC:
-			return easeInCubic(x);
-		case EASE_OUT_CUBIC:
-			return easeOutCubic(x);
-		case EASE_IN_OUT_CUBIC:
-			return easeInOutCubic(x);
-		case EASE_IN_QUINT:
-			return easeInQuint(x);
-		case EASE_OUT_QUINT:
-			return easeOutQuint(x);
-		case EASE_IN_OUT_QUINT:
-			return easeInOutQuint(x);
-		case EASE_IN_CIRC:
-			return easeInCirc(x);
-		case EASE_OUT_CIRC:
-			return easeOutCirc(x);
-		case EASE_IN_OUT_CIRC:
-			return easeInOutCirc(x);
-		case EASE_IN_ELASTIC:
-			return easeInElastic(x);
-		case EASE_OUT_ELASTIC:
-			return easeOutElastic(x);
-		case EASE_IN_OUT_ELASTIC:
-			return easeInOutElastic(x);
-		case EASE_IN_QUAD:
-			return easeInQuad(x);
-		case EASE_OUT_QUAD:
-			return easeOutQuad(x);
-		case EASE_IN_OUT_QUAD:
-			return easeInOutQuad(x);
-		case EASE_IN_QUART:
-			return easeInQuart(x);
-		case EASE_OUT_QUART:
-			return easeOutQuart(x);
-		case EASE_IN_OUT_QUART:
-			return easeInOutQuart(x);
-		case EASE_IN_EXPONENTIAL:
-			return easeInExponential(x);
-		case EASE_OUT_EXPONENTIAL:
-			return easeOutExponential(x);
-		case EASE_IN_OUT_EXPONENTIAL:
-			return easeInOutExponential(x);
-		case EASE_IN_BACK:
-			return easeInBack(x);
-		case EASE_OUT_BACK:
-			return easeOutBack(x);
-		case EASE_IN_OUT_BACK:
-			return easeInOutBack(x);
-		case EASE_IN_BOUNCE:
-			return easeInBounce(x);
-		case EASE_OUT_BOUNCE:
-			return easeOutBounce(x);
-		case EASE_IN_OUT_BOUNCE:
-			return easeInOutBounce(x);
-		default:
-			System.err.println("Unkown Easing type " + easing.name());
-			return x;
-		}
+        return switch (easing) {
+            case LINEAR -> linear(x);
+            case EASE_IN_SINE -> easeInSine(x);
+            case EASE_OUT_SINE -> easeOutSine(x);
+            case EASE_IN_OUT_SINE -> easeInOutSine(x);
+            case EASE_IN_CUBIC -> easeInCubic(x);
+            case EASE_OUT_CUBIC -> easeOutCubic(x);
+            case EASE_IN_OUT_CUBIC -> easeInOutCubic(x);
+            case EASE_IN_QUINT -> easeInQuint(x);
+            case EASE_OUT_QUINT -> easeOutQuint(x);
+            case EASE_IN_OUT_QUINT -> easeInOutQuint(x);
+            case EASE_IN_CIRC -> easeInCirc(x);
+            case EASE_OUT_CIRC -> easeOutCirc(x);
+            case EASE_IN_OUT_CIRC -> easeInOutCirc(x);
+            case EASE_IN_ELASTIC -> easeInElastic(x);
+            case EASE_OUT_ELASTIC -> easeOutElastic(x);
+            case EASE_IN_OUT_ELASTIC -> easeInOutElastic(x);
+            case EASE_IN_QUAD -> easeInQuad(x);
+            case EASE_OUT_QUAD -> easeOutQuad(x);
+            case EASE_IN_OUT_QUAD -> easeInOutQuad(x);
+            case EASE_IN_QUART -> easeInQuart(x);
+            case EASE_OUT_QUART -> easeOutQuart(x);
+            case EASE_IN_OUT_QUART -> easeInOutQuart(x);
+            case EASE_IN_EXPONENTIAL -> easeInExponential(x);
+            case EASE_OUT_EXPONENTIAL -> easeOutExponential(x);
+            case EASE_IN_OUT_EXPONENTIAL -> easeInOutExponential(x);
+            case EASE_IN_BACK -> easeInBack(x);
+            case EASE_OUT_BACK -> easeOutBack(x);
+            case EASE_IN_OUT_BACK -> easeInOutBack(x);
+            case EASE_IN_BOUNCE -> easeInBounce(x);
+            case EASE_OUT_BOUNCE -> easeOutBounce(x);
+            case EASE_IN_OUT_BOUNCE -> easeInOutBounce(x);
+        };
 	}
 }

@@ -89,7 +89,7 @@ public class Animation {
 	/**
 	 * How much the number should increase / decrease with each second
 	 */
-	private float changePerMillisecond;
+	private final float changePerMillisecond;
 
 	/**
 	 * The initial value
@@ -108,7 +108,7 @@ public class Animation {
 	/**
 	 * The easing of the animation
 	 */
-	private Easing easing;
+	private final Easing easing;
 	
 	/**
 	 * Resets the animation to the start

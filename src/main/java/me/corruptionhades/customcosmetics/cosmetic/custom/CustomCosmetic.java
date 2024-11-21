@@ -7,13 +7,10 @@ import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.custom.anim.Custom3ValueAnimation;
 import me.corruptionhades.customcosmetics.objfile.ObjFile;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.File;
@@ -43,33 +40,22 @@ public class CustomCosmetic extends Cosmetic {
         CustomCosmeticsClient.getInstance().getCosmeticManager().registerCosmetic(this);
     }
 
-    /*
-    I am making a custom cosmetic creator for my minecraft client and have some code here to handle cosmetics be ajacent to the left and right arm, but I also want the player to set custom rotations/scale/transformation, I tried the comments but
-    **bruh it does work**
-     */
-
     /**
      * @see CustomCosmeticsClient#onTick() for animated texture updating
      */
     @Override
     public void render(PlayerEntityModel model, MatrixStack matrices, PlayerEntityRenderState state) {
-
         Matrix4f matrix4f = new Matrix4f();
-
 
         matrix4f.translate(transX, transY, transZ);
         matrix4f.rotate(rotX, 1, 0, 0);
         matrix4f.rotate(rotY, 0, 1, 0);
         matrix4f.rotate(rotZ, 0, 0, 1);
         matrix4f.scale(scaleX, scaleY, scaleZ);
-        //matrix4f.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
 
         if(textureLocation != null) {
-       //     mc.getTextureManager().bindTexture(textureLocation.getTexture());
             RenderSystem.setShaderTexture(0, textureLocation.getTexture());
         }
-
         try {
             for (Custom3ValueAnimation customAnimation : customAnimations) {
 

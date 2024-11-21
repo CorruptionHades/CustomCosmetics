@@ -1,6 +1,5 @@
 package me.corruptionhades.customcosmetics.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomAnimation;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.custom.anim.Custom3ValueAnimation;
@@ -10,14 +9,11 @@ import me.corruptionhades.customcosmetics.ui.comp.impl.Button;
 import me.corruptionhades.customcosmetics.ui.comp.impl.TextField;
 import me.corruptionhades.customcosmetics.ui.comp.impl.animation.Animation3ValueComp;
 import me.corruptionhades.customcosmetics.ui.comp.impl.animation.AnimationEditComp;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
-import me.corruptionhades.customcosmetics.utils.RenderUtils;
-import net.minecraft.client.MinecraftClient;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;

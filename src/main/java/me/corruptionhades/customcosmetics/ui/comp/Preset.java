@@ -1,6 +1,6 @@
 package me.corruptionhades.customcosmetics.ui.comp;
 
-import me.corruptionhades.customcosmetics.utils.GuiUtils;
+import me.corruptionhades.customcosmetics.utils.render.GuiUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 

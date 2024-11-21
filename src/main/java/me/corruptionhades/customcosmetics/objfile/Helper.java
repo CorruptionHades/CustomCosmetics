@@ -4,16 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BuiltBuffer;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

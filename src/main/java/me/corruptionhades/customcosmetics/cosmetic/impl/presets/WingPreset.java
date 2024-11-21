@@ -4,8 +4,7 @@ import me.corruptionhades.customcosmetics.cosmetic.BodyPart;
 import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
 import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
-import me.corruptionhades.customcosmetics.utils.TextureUtil;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+import me.corruptionhades.customcosmetics.utils.render.TextureUtil;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
@@ -54,7 +53,7 @@ public class WingPreset extends Cosmetic {
             else if(wee >= 91 && !reached) {
                 reached = true;
             }
-            else if(wee > 0 && reached) {
+            else if(wee > 0) {
                 wee-=incr;
             }
             else {

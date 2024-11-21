@@ -1,10 +1,8 @@
 package me.corruptionhades.customcosmetics.ui.comp.impl;
 
-import me.corruptionhades.customcosmetics.animation.Animation;
-import me.corruptionhades.customcosmetics.animation.Easing;
 import me.corruptionhades.customcosmetics.ui.comp.Callback;
 import me.corruptionhades.customcosmetics.ui.comp.Preset;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
 import me.corruptionhades.customcosmetics.utils.NumberSetting;
 import net.minecraft.client.gui.DrawContext;
 

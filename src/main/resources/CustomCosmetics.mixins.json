@@ -9,8 +9,7 @@
     "ItemRendererMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
-    "PlayerEntityRendererMixin",
-    "ShieldEntityModelMixin"
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,18 +1,13 @@
 package me.corruptionhades.customcosmetics.cosmetic.impl.presets.item;
 
 import me.corruptionhades.customcosmetics.cosmetic.BodyPart;
-import me.corruptionhades.customcosmetics.cosmetic.Cosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.ItemCosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
 import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
-import me.corruptionhades.customcosmetics.utils.TextureUtil;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
+import me.corruptionhades.customcosmetics.utils.render.TextureUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;

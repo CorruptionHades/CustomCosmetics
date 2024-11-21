@@ -26,6 +26,11 @@ public class CustomResourceLocation {
         this.fpt = fpt;
         currentFrame = 0;
         currentTick = 0;
+
+        if(locations.length < 1) {
+            throw new IllegalArgumentException("Must have at least one texture location");
+        }
+
         if(!animated) {
             textures.add(locations[0]);
         }

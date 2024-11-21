@@ -33,8 +33,6 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
     private boolean baked = false;
     private boolean closed = false;
 
-    private final Obj readObj;
-
     /**
      * Creates a new ObjFile
      *
@@ -45,18 +43,9 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
     public TextureObjFile(String name, ResourceProvider provider) throws IOException {
         this.name = name;
         this.provider = provider;
-        this.readObj = ObjUtils.convertToRenderable(ObjReader.read(provider.open(name)));
-      //  bake();
-    }
-
-    private static Vec3d transformVec3d(Vec3d in) {
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        Vec3d camPos = camera.getPos();
-        return in.subtract(camPos);
     }
 
     private void bake() throws IOException {
-
         try (InputStream reader = provider.open(name)) {
             Obj obj = ObjUtils.convertToRenderable(ObjReader.read(reader));
 
@@ -66,7 +55,6 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
             for (int i = 0; i < obj.getNumFaces(); i++) {
                 ObjFace face = obj.getFace(i);
                 boolean hasUV = face.containsTexCoordIndices();
-                boolean hasNormals = face.containsNormalIndices();
 
                 for (int j = 0; j < face.getNumVertices(); j++) {
                     FloatTuple vertex = obj.getVertex(face.getVertexIndex(j));
@@ -81,20 +69,8 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
                     }
 
                     vertexConsumer.color(1f, 1f, 1f, 1f);
-
-               /*     if (hasNormals) {
-                        FloatTuple normal = obj.getNormal(face.getNormalIndex(j));
-                        vertexConsumer.normal(normal.getX(), normal.getY(), normal.getZ());
-                    }
-                    else {
-                        vertexConsumer.normal(0, 0, 0);
-                    } */
-
-                    //vertexConsumer.color(1f, 1f, 1f, 1f); // Default white color
-             //       vertexConsumer.next();
                 }
             }
-
 
             BuiltBuffer builtBuffer = builder.end();
             VertexBuffer vbo = Helper.createVbo(builtBuffer, GlUsage.DYNAMIC_WRITE);
@@ -156,21 +132,6 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         }
 
 
-    }
-
-    private Matrix4f getCameraRotationMatrix() {
-        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        Matrix4f rotationMatrix = new Matrix4f();
-
-        // Fetch camera rotation as a quaternion
-        float pitch = camera.getPitch();
-        float yaw = camera.getYaw();
-
-        // Apply rotations (order matters: yaw first, then pitch)
-        rotationMatrix.rotateY((float) Math.toRadians(-yaw)); // Negate to align with view
-        rotationMatrix.rotateX((float) Math.toRadians(-pitch));
-
-        return rotationMatrix;
     }
 
     @Override

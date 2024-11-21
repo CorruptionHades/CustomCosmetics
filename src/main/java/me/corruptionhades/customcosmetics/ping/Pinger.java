@@ -10,8 +10,6 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,7 +19,6 @@ import net.minecraft.util.math.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4d;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
@@ -66,7 +63,7 @@ public class Pinger {
             catch (ConcurrentModificationException ignored) {}
 
             if(pings.size() >= 5) {
-                pings.remove(0);
+                pings.removeFirst();
             }
 
             BlockPos pos = new BlockPos(((int) Math.round(bhr.getPos().x)),
@@ -99,7 +96,7 @@ public class Pinger {
             catch (ConcurrentModificationException ignored) {}
 
             if(pings.size() >= 5) {
-                pings.remove(0);
+                pings.removeFirst();
             }
 
             pings.add(new PingResult(target.getPos(), null, System.currentTimeMillis(), target));

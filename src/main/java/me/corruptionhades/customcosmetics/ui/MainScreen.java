@@ -10,15 +10,13 @@ import me.corruptionhades.customcosmetics.ui.comp.SettingsView;
 import me.corruptionhades.customcosmetics.ui.comp.impl.Button;
 import me.corruptionhades.customcosmetics.ui.comp.impl.DropDown;
 import me.corruptionhades.customcosmetics.ui.comp.impl.TextField;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
-import me.corruptionhades.customcosmetics.utils.GuiUtils;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.GuiUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 

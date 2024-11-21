@@ -4,8 +4,7 @@ import me.corruptionhades.customcosmetics.animation.Animation;
 import me.corruptionhades.customcosmetics.animation.Easing;
 import me.corruptionhades.customcosmetics.ui.comp.Callback;
 import me.corruptionhades.customcosmetics.ui.comp.Preset;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
-import net.minecraft.client.Mouse;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
 import net.minecraft.client.gui.DrawContext;
 
 import java.awt.*;

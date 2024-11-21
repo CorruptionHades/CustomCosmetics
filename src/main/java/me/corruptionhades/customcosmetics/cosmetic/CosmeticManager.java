@@ -29,6 +29,12 @@ public class CosmeticManager {
                     new File("/home/mitarbeiter/Downloads/katana_sword.obj"),
                     new File("/home/mitarbeiter/Downloads/diamond.png")
             ));
+
+            registerCosmetic(new ShieldPreset(
+                    "shield_zickzackv5_bastighg",
+                    new File("/home/mitarbeiter/Downloads/shield_zickzackv5_bastighg.obj"),
+                    new File("/home/mitarbeiter/Downloads/shield_333-47.png")
+            ));
         }
         else {
             registerCosmetic(new WingPreset("wichtiger_dark_wings", BodyPart.BODY,

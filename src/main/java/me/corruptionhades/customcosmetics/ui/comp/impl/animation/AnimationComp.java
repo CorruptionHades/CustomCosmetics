@@ -2,14 +2,11 @@ package me.corruptionhades.customcosmetics.ui.comp.impl.animation;
 
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomAnimation;
 import me.corruptionhades.customcosmetics.ui.CreateScreen;
-import me.corruptionhades.customcosmetics.ui.MainScreen;
 import me.corruptionhades.customcosmetics.ui.comp.Preset;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
 import net.minecraft.client.gui.DrawContext;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.io.IOException;
 
 public class AnimationComp extends Preset {
 

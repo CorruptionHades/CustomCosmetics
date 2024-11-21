@@ -1,8 +1,7 @@
-package me.corruptionhades.customcosmetics.utils;
+package me.corruptionhades.customcosmetics.utils.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,9 +13,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 // This is a Helper class for drawing specific things to the screen
 public class RenderUtils implements IMinecraftInstance {

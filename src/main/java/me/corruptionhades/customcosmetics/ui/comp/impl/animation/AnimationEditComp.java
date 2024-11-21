@@ -5,7 +5,7 @@ import me.corruptionhades.customcosmetics.cosmetic.custom.CustomAnimation;
 import me.corruptionhades.customcosmetics.ui.comp.Preset;
 import me.corruptionhades.customcosmetics.ui.comp.impl.DropDown;
 import me.corruptionhades.customcosmetics.ui.comp.impl.Slider;
-import me.corruptionhades.customcosmetics.utils.FontUtil;
+import me.corruptionhades.customcosmetics.utils.render.FontUtil;
 import me.corruptionhades.customcosmetics.utils.NumberSetting;
 import net.minecraft.client.gui.DrawContext;
 

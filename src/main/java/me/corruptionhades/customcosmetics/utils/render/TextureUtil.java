@@ -1,4 +1,4 @@
-package me.corruptionhades.customcosmetics.utils;
+package me.corruptionhades.customcosmetics.utils.render;
 
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
 import net.minecraft.client.MinecraftClient;
