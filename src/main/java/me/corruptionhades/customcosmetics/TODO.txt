@@ -1,0 +1,5 @@
+[ ] Support .avif file loading
+[ ] FP inspect animation
+[ ] support more json properties
+[ ] Custom cape support
+[ ] Md5 converter/renderer
