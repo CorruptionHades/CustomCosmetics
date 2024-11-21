@@ -7,8 +7,10 @@ import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
 import me.corruptionhades.customcosmetics.utils.TextureUtil;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -62,7 +64,7 @@ public class WingPreset extends Cosmetic {
     }
 
     @Override
-    public void render(PlayerEntityModel model, MatrixStack matrices) {
+    public void render(PlayerEntityModel model, MatrixStack matrices, PlayerEntityRenderState state) {
         if(obj != null) {
 
             float scale = 0.1f;
@@ -72,9 +74,9 @@ public class WingPreset extends Cosmetic {
             matrix.scale(scale, -scale, scale);
             matrix.translate(0, yOff, zOff);
 
-         //   matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
+            matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
-            obj.draw(matrices, matrix, crl);
+            obj.draw(matrices, matrix, crl, new Vec3d(state.x, state.y, state.z));
 
             Matrix4f matrix2 = new Matrix4f();
 
@@ -82,9 +84,9 @@ public class WingPreset extends Cosmetic {
             matrix2.scale(-scale, -scale, scale);
             matrix2.translate(0, yOff, zOff);
 
-       //     matrix2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
+            matrix2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
-            obj.draw(matrices, matrix2, crl);
+            obj.draw(matrices, matrix2, crl, new Vec3d(state.x, state.y, state.z));
         }
     }
 

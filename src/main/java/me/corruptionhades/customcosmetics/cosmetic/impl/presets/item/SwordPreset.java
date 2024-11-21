@@ -8,11 +8,13 @@ import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
 import me.corruptionhades.customcosmetics.utils.TextureUtil;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -39,6 +41,8 @@ public class SwordPreset extends ItemCosmetic {
         this.texturePath = texturePath;
     }
 
+    int wee = 0;
+
     @Override
     public void render(ItemStack stack, MatrixStack matrices) {
         if(obj != null) {
@@ -46,10 +50,10 @@ public class SwordPreset extends ItemCosmetic {
             matrix4f.scale(0.5f, 0.5f, 0.5f);
             matrix4f.translate(1.1f, 1.1f, 1f);
 
-            matrix4f.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(90));
-            matrix4f.rotate(RotationAxis.POSITIVE_X.rotationDegrees(45));
+            matrix4f.rotate(RotationAxis.NEGATIVE_Y.rotationDegrees(90));
+            matrix4f.rotate(RotationAxis.NEGATIVE_X.rotationDegrees(45));
 
-            obj.draw(matrices, matrix4f, crl);
+            obj.draw(matrices, matrix4f, crl, new Vec3d(0, 0, 0));
         }
     }
 
@@ -57,6 +61,12 @@ public class SwordPreset extends ItemCosmetic {
     public void onTick() {
         if(crl != null) {
             crl.update();
+        }
+
+        wee++;
+
+        if(wee > 360) {
+            wee = 0;
         }
     }
 

@@ -19,6 +19,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -110,37 +111,8 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         baked = true;
     }
 
-    public void rendur(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
-                       PlayerEntityRenderState state, float limbAngle, float limbDistance) {
-        Identifier ident = TextureUtil.crls.get(0).getTexture();
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(ident));
-        RenderSystem.setShaderTexture(0, ident);
-
-        Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
-        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-
-        for (int i = 0; i < readObj.getNumFaces(); i++) {
-            ObjFace face = readObj.getFace(i);
-            boolean hasUV = face.containsTexCoordIndices();
-
-            for (int j = 0; j < face.getNumVertices(); j++) {
-                FloatTuple vertex = readObj.getVertex(face.getVertexIndex(j));
-                float x = (float) (vertex.getX() - cameraPos.x);
-                float y = (float) (vertex.getY() - cameraPos.y);
-                float z = (float) (vertex.getZ() - cameraPos.z);
-
-                vertexConsumer.vertex(positionMatrix, x, y, z)
-                        .color(1, 1, 1, 1)
-                        .texture(hasUV ? readObj.getTexCoord(face.getTexCoordIndex(j)).getX() : 0, hasUV ? 1 - readObj.getTexCoord(face.getTexCoordIndex(j)).getY() : 0)
-                        .overlay(OverlayTexture.DEFAULT_UV)
-                        .light(light)
-                        .normal(0, 1, 0);
-            }
-        }
-    }
-
-    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable CustomResourceLocation crl) {
-        draw(stack, viewMatrix, crl == null ? null : crl.getTexture());
+    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable CustomResourceLocation crl, Vec3d origin) {
+        draw(stack, viewMatrix, crl == null ? null : crl.getTexture(), origin);
     }
 
     /**
@@ -150,8 +122,7 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
      * @param viewMatrix View matrix to apply to this ObjFile, independent of any other matrix.
      * @param textureIdentifier Path to the texture image to use.
      */
-
-    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable Identifier textureIdentifier) {
+    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable Identifier textureIdentifier, Vec3d origin) {
         if (closed) {
             throw new IllegalStateException("Closed");
         }
@@ -163,37 +134,35 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
             }
         }
 
-        Matrix4f projectionMatrix = RenderSystem.getProjectionMatrix();
+        try {
+            Matrix4fStack modelMatrix = RenderSystem.getModelViewStack();
+            modelMatrix.pushMatrix();
+            modelMatrix.mul(stack.peek().getPositionMatrix());
+            modelMatrix.mul(viewMatrix);
 
-        MatrixStack matrices = new FastMStack();
-        matrices.multiplyPositionMatrix(RenderRefs.positionMatrix);
+            Helper.setupRender();
 
-        Matrix4f modelMatrix = new Matrix4f(stack.peek().getPositionMatrix());
+            RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
+            if (textureIdentifier != null) {
+                RenderSystem.setShaderTexture(0, textureIdentifier);
+            }
 
+            for (Map.Entry<Obj, VertexBuffer> entry : buffers.entrySet()) {
+                VertexBuffer vbo = entry.getValue();
+                vbo.bind();
+                vbo.draw(modelMatrix, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
+            }
 
+            modelMatrix.popMatrix();
 
-        modelMatrix.mul(viewMatrix);
-        modelMatrix.mul(RenderSystem.getModelViewStack());
-
-        // funi
-//        projectionMatrix.add(getCameraRotationMatrix());
-
-        Helper.setupRender();
-
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-        if (textureIdentifier != null) {
-            RenderSystem.setShaderTexture(0, textureIdentifier);
+            VertexBuffer.unbind();
+            Helper.endRender();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
-        for (Map.Entry<Obj, VertexBuffer> entry : buffers.entrySet()) {
-            VertexBuffer vbo = entry.getValue();
-            vbo.bind();
-          //  vbo.draw();
-            vbo.draw(modelMatrix, projectionMatrix, RenderSystem.getShader());
-        }
 
-        VertexBuffer.unbind();
-        Helper.endRender();
     }
 
     private Matrix4f getCameraRotationMatrix() {

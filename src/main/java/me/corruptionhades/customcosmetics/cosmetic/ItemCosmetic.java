@@ -2,6 +2,7 @@ package me.corruptionhades.customcosmetics.cosmetic;
 
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +17,7 @@ public abstract class ItemCosmetic extends Cosmetic {
     }
 
     @Override
-    public void render(PlayerEntityModel model, MatrixStack matrices) {
+    public void render(PlayerEntityModel model, MatrixStack matrices, PlayerEntityRenderState state) {
         // NO-OP
     }
 

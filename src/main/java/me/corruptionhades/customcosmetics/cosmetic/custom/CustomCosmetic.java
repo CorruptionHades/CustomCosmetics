@@ -9,6 +9,7 @@ import me.corruptionhades.customcosmetics.objfile.ObjFile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
@@ -51,7 +52,7 @@ public class CustomCosmetic extends Cosmetic {
      * @see CustomCosmeticsClient#onTick() for animated texture updating
      */
     @Override
-    public void render(PlayerEntityModel model, MatrixStack matrices) {
+    public void render(PlayerEntityModel model, MatrixStack matrices, PlayerEntityRenderState state) {
 
         Matrix4f matrix4f = new Matrix4f();
 

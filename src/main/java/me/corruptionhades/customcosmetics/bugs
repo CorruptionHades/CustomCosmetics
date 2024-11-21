@@ -1,0 +1,6 @@
+Weird ahh rotating camera issue which took 5 days to fix:
+
+see SkyRendering#renderStars
+
+
+https://stackoverflow.com/questions/58204330/how-to-find-all-references-to-a-method-programmatically

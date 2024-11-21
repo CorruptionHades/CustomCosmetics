@@ -23,6 +23,12 @@ public class CosmeticManager {
             registerCosmetic(new WingPreset("angel_wings", BodyPart.BODY,
                     new File("/home/mitarbeiter/Downloads/angel_wings.obj"),
                     new File("/home/mitarbeiter/Downloads/wing_6.png")));
+
+            registerCosmetic(new SwordPreset(
+                    "katana",
+                    new File("/home/mitarbeiter/Downloads/katana_sword.obj"),
+                    new File("/home/mitarbeiter/Downloads/diamond.png")
+            ));
         }
         else {
             registerCosmetic(new WingPreset("wichtiger_dark_wings", BodyPart.BODY,

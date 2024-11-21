@@ -33,8 +33,7 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
         this.model = context.getModel();
 
         try {
-            objj = new TextureObjFile(
-"angel_wings.obj", TextureObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/"))
+            objj = new AObjFile("angel_wings.obj", AObjFile.ResourceProvider.ofPath(Path.of("/home/mitarbeiter/Downloads/"))
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -66,12 +65,10 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.body.pitch));
             }
 
-            cosmetic.render(model, matrices);
+            cosmetic.render(model, matrices, state);
             matrices.pop();
         }
-
-        objj.rendur(matrices, vertexConsumers, light, state, limbAngle, limbDistance);
     }
 
-    private TextureObjFile objj;
+    private AObjFile objj;
 }
