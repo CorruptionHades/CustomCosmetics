@@ -83,6 +83,7 @@ public class TextureUtil {
             crl = new CustomResourceLocation(textures.size() > 1, textures.toArray(new Identifier[0]));
 
         } catch (IOException e) {
+            System.out.println("error at " + texturePath.getName());
             e.printStackTrace();
         }
 

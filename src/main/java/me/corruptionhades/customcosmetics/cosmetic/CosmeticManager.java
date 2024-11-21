@@ -1,13 +1,16 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.BandanaPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.WingPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.ShieldPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.SwordPreset;
 import me.corruptionhades.customcosmetics.utils.TesterUtil;
+import net.minecraft.item.Items;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CosmeticManager {
@@ -20,15 +23,16 @@ public class CosmeticManager {
 
     public void init() {
         if(TesterUtil.isUbuntu()) {
+            // /home/mitarbeiter/Downloads
             registerCosmetic(new WingPreset("angel_wings", BodyPart.BODY,
                     new File("/home/mitarbeiter/Downloads/angel_wings.obj"),
                     new File("/home/mitarbeiter/Downloads/wing_6.png")));
 
-            registerCosmetic(new SwordPreset(
+           /* registerCosmetic(new SwordPreset(
                     "katana",
                     new File("/home/mitarbeiter/Downloads/katana_sword.obj"),
                     new File("/home/mitarbeiter/Downloads/diamond.png")
-            ));
+            )); */
 
             registerCosmetic(new ShieldPreset(
                     "shield_zickzackv5_bastighg",
@@ -37,22 +41,37 @@ public class CosmeticManager {
             ));
         }
         else {
+
+            String path = "H:/IntelijProjects/CustomCosmetics/assets/";
+
             registerCosmetic(new WingPreset("wichtiger_dark_wings", BodyPart.BODY,
-                    new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/wichtiger.obj"),
-                    new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/wing/Wichtiger Dark Wings/frames/")));
+                    new File(path + "wings/wichtiger.obj"),
+                    new File(path + "wings/frames/")
+            ));
 
-
-            // /home/mitarbeiter/Downloads
-
-            registerCosmetic(new SwordPreset(
-                    "obsidian_sword", new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/dragon_sword_ob.obj"),
-                    new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/sword/Dragon Obsidian Sword/frames")
+            registerCosmetic(new SwordPreset("dragon_sword",
+                    new File(path + "sword/dragon_sword.obj"),
+                    new HashMap<>() {
+                        {
+                            put(Items.NETHERITE_SWORD, new File(path + "sword/netherite.png"));
+                            put(Items.DIAMOND_SWORD, new File(path + "sword/diamond.png"));
+                            put(Items.GOLDEN_SWORD, new File(path + "sword/gold.png"));
+                            put(Items.IRON_SWORD, new File(path + "sword/iron.png"));
+                            put(Items.STONE_SWORD, new File(path + "sword/stone.png"));
+                            put(Items.WOODEN_SWORD, new File(path + "sword/wood.png"));
+                        }
+                    }
             ));
 
             registerCosmetic(new ShieldPreset(
-                    "no_risk_black_shield",
-                    new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/roundshield.obj"),
-                    new File("H:/C#/BadlionCosmetic/bin/Debug/net7.0/out/shield/NoRisk Black Shield/frames/")
+                    "basti_shield",
+                    new File(path + "/shield/roundshield.obj"),
+                    new File(path + "/shield/frames/")
+            ));
+
+            registerCosmetic(new BandanaPreset("blue_lightning_bandana",
+                    new File(path + "/bandana/bandana.obj"),
+                    new File(path + "/bandana/frames/")
             ));
         }
 

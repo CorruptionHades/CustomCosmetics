@@ -43,6 +43,10 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotation(model.body.roll));
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.body.pitch));
             }
+            else if(cosmetic.getType() == BodyPart.HEAD) {
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotation(model.head.yaw));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotation(model.head.pitch));
+            }
 
             cosmetic.render(model, matrices, state);
             matrices.pop();

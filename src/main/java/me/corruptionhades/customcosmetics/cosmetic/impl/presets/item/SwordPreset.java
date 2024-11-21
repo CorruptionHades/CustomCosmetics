@@ -6,25 +6,29 @@ import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation
 import me.corruptionhades.customcosmetics.objfile.TextureObjFile;
 import me.corruptionhades.customcosmetics.utils.render.TextureUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SwordPreset extends ItemCosmetic {
 
     private TextureObjFile obj;
 
     @Nullable
-    private final File texturePath;
+    private final Map<Item, File> texturePath;
 
-    private CustomResourceLocation crl;
+    private Map<Item, CustomResourceLocation> crls;
 
-    public SwordPreset(String name, File modelFile, @Nullable File texturePath) {
+    public SwordPreset(String name, File modelFile, @Nullable Map<Item, File> texturePath) {
         super(name, BodyPart.RIGHT_ARM, Items.NETHERITE_SWORD);
         try {
             obj = new TextureObjFile(modelFile.getName(), TextureObjFile.ResourceProvider.ofPath(modelFile.toPath().getParent()));
@@ -48,14 +52,20 @@ public class SwordPreset extends ItemCosmetic {
             matrix4f.rotate(RotationAxis.NEGATIVE_Y.rotationDegrees(90));
             matrix4f.rotate(RotationAxis.NEGATIVE_X.rotationDegrees(45));
 
-            obj.draw(matrices, matrix4f, crl, new Vec3d(0, 0, 0));
+            CustomResourceLocation crl = crls.get(stack.getItem());
+            obj.draw(matrices, matrix4f, crl);
         }
     }
 
     @Override
     public void onTick() {
-        if(crl != null) {
-            crl.update();
+
+        if(crls != null) {
+            crls.forEach((item, crl) -> {
+                if(crl != null) {
+                    crl.update();
+                }
+            });
         }
 
         wee++;
@@ -68,7 +78,14 @@ public class SwordPreset extends ItemCosmetic {
     @Override
     public void loadTexture() {
         if(texturePath != null) {
-            crl = TextureUtil.loadTexture(texturePath);
+            crls = new HashMap<>();
+            texturePath.forEach((item, file) -> {
+                crls.put(item, TextureUtil.loadTexture(file));
+            });
         }
+    }
+
+    public List<Item> getItems() {
+        return new ArrayList<>(texturePath.keySet());
     }
 }

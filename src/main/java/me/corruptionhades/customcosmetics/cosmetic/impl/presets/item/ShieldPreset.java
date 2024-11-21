@@ -9,7 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -45,7 +44,7 @@ public class ShieldPreset extends ItemCosmetic {
             matrix4f.rotate(RotationAxis.POSITIVE_X.rotationDegrees(180));
             matrix4f.rotate(RotationAxis.POSITIVE_Z.rotationDegrees(180));
 
-            obj.draw(matrices, matrix4f, crl, new Vec3d(0, 0, 0));
+            obj.draw(matrices, matrix4f, crl);
         }
     }
 

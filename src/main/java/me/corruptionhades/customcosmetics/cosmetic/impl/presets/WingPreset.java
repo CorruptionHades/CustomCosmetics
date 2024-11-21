@@ -9,7 +9,6 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -75,7 +74,7 @@ public class WingPreset extends Cosmetic {
 
             matrix.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
-            obj.draw(matrices, matrix, crl, new Vec3d(state.x, state.y, state.z));
+            obj.draw(matrices, matrix, crl);
 
             Matrix4f matrix2 = new Matrix4f();
 
@@ -85,7 +84,7 @@ public class WingPreset extends Cosmetic {
 
             matrix2.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(wee));
 
-            obj.draw(matrices, matrix2, crl, new Vec3d(state.x, state.y, state.z));
+            obj.draw(matrices, matrix2, crl);
         }
     }
 

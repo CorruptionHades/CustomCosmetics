@@ -4,14 +4,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.javagl.obj.*;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomResourceLocation;
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUsage;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
@@ -80,8 +78,8 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
         baked = true;
     }
 
-    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable CustomResourceLocation crl, Vec3d origin) {
-        draw(stack, viewMatrix, crl == null ? null : crl.getTexture(), origin);
+    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable CustomResourceLocation crl) {
+        draw(stack, viewMatrix, crl == null ? null : crl.getTexture());
     }
 
     /**
@@ -91,7 +89,7 @@ public class TextureObjFile implements Closeable, IMinecraftInstance {
      * @param viewMatrix View matrix to apply to this ObjFile, independent of any other matrix.
      * @param textureIdentifier Path to the texture image to use.
      */
-    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable Identifier textureIdentifier, Vec3d origin) {
+    public void draw(MatrixStack stack, Matrix4f viewMatrix, @Nullable Identifier textureIdentifier) {
         if (closed) {
             throw new IllegalStateException("Closed");
         }
