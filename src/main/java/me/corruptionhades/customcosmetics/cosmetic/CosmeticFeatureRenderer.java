@@ -1,13 +1,17 @@
 package me.corruptionhades.customcosmetics.cosmetic;
 
 import me.corruptionhades.customcosmetics.CustomCosmeticsClient;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.MinecartEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
+
+import java.util.Objects;
 
 public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
 
@@ -22,8 +26,13 @@ public class CosmeticFeatureRenderer extends FeatureRenderer<PlayerEntityRenderS
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, PlayerEntityRenderState state, float limbAngle, float limbDistance) {
+
+        if(MinecraftClient.getInstance().player == null) {
+            return;
+        }
+
         if(state.sneaking) {
-            matrices.translate(0, 0.2, 0);
+            matrices.translate(0,0.2, 0);
         }
 
         for(Cosmetic cosmetic : CustomCosmeticsClient.getInstance().getCosmeticManager().getCosmetics()) {

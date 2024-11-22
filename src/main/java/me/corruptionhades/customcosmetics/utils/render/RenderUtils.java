@@ -2,6 +2,7 @@ package me.corruptionhades.customcosmetics.utils.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.corruptionhades.customcosmetics.interfaces.IMinecraftInstance;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,34 +21,7 @@ public class RenderUtils implements IMinecraftInstance {
 
     // Stolen from DrawableHelper
     public static void fill(@NotNull DrawContext context, double x1, double y1, double x2, double y2, int color) {
-        MatrixStack matrices = context.getMatrices();
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-        double i;
-        if (x1 < x2) {
-            i = x1;
-            x1 = x2;
-            x2 = i;
-        }
-        if (y1 < y2) {
-            i = y1;
-            y1 = y2;
-            y2 = i;
-        }
-        float f = (float) (color >> 24 & 0xFF) / 255.0f;
-        float g = (float) (color >> 16 & 0xFF) / 255.0f;
-        float h = (float) (color >> 8 & 0xFF) / 255.0f;
-        float j = (float) (color & 0xFF) / 255.0f;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-
-       // RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0f).color(g, h, j, f);
-        bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0f).color(g, h, j, f);
-        bufferBuilder.vertex(matrix, (float) x2, (float) y1, 0.0f).color(g, h, j, f);
-        bufferBuilder.vertex(matrix, (float) x1, (float) y1, 0.0f).color(g, h, j, f);
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-        RenderSystem.disableBlend();
+        context.fill((int) x1, (int) y1, (int) x2, (int) y2, color);
     }
 
     public static void drawHollowRect(DrawContext context, int x, int y, int width, int height, int color, int thickness) {
@@ -68,7 +42,7 @@ public class RenderUtils implements IMinecraftInstance {
         float h = (float) (color >> 8 & 255) / 255.0F;
         float k = (float) (color & 255) / 255.0F;
         RenderSystem.enableBlend();
-       // RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 
         renderRoundedQuadInternal(matrix, g, h, k, f, fromX, fromY, toX, toY, rad, samples);
         
@@ -119,8 +93,8 @@ public class RenderUtils implements IMinecraftInstance {
         float green = (float) (color >> 8 & 255) / 255.0F;
         float blue = (float) (color & 255) / 255.0F;
         RenderSystem.enableBlend();
-        
-      //  RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
         Matrix4f matrix = matrices.peek().getPositionMatrix();
         BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 

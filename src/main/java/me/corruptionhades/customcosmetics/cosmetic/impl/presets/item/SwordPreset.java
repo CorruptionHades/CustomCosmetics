@@ -29,7 +29,7 @@ public class SwordPreset extends ItemCosmetic {
     private Map<Item, CustomResourceLocation> crls;
 
     public SwordPreset(String name, File modelFile, @Nullable Map<Item, File> texturePath) {
-        super(name, BodyPart.RIGHT_ARM, Items.NETHERITE_SWORD);
+        super(name, BodyPart.RIGHT_ARM, null);
         try {
             obj = new TextureObjFile(modelFile.getName(), TextureObjFile.ResourceProvider.ofPath(modelFile.toPath().getParent()));
         }

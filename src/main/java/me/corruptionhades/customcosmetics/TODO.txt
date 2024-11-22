@@ -6,5 +6,6 @@
 [ ] Bow preset
 [ ] gui textures
 [ ] fix textures
-[ ] Cape preset/support
+[X] Cape preset/support
 [ ] item glint
+[ ] only per player

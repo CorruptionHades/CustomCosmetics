@@ -3,6 +3,7 @@ package me.corruptionhades.customcosmetics.cosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.custom.CustomCosmetic;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.BandanaPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.CapePreset;
+import me.corruptionhades.customcosmetics.cosmetic.impl.presets.MD5PresetTest;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.WingPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.ShieldPreset;
 import me.corruptionhades.customcosmetics.cosmetic.impl.presets.item.SwordPreset;
@@ -30,17 +31,23 @@ public class CosmeticManager {
                     new File("/home/mitarbeiter/Downloads/angel_wings.obj"),
                     new File("/home/mitarbeiter/Downloads/wing_6.png")));
 
-           /* registerCosmetic(new SwordPreset(
+            registerCosmetic(new SwordPreset(
                     "katana",
                     new File("/home/mitarbeiter/Downloads/katana_sword.obj"),
-                    new File("/home/mitarbeiter/Downloads/diamond.png")
-            )); */
+                    new HashMap<>() {
+                        {
+                            put(Items.DIAMOND_SWORD, new File("/home/mitarbeiter/Downloads/diamond.png"));
+                        }
+                    }
+            ));
 
             registerCosmetic(new ShieldPreset(
                     "shield_zickzackv5_bastighg",
                     new File("/home/mitarbeiter/Downloads/shield_zickzackv5_bastighg.obj"),
                     new File("/home/mitarbeiter/Downloads/shield_333-47.png")
             ));
+
+            registerCosmetic(new MD5PresetTest(new File("/home/mitarbeiter/Downloads/pet_26.md5mesh")));
         }
         else {
 
@@ -80,8 +87,6 @@ public class CosmeticManager {
                     new File(path + "/cape.png")
             ));
         }
-
-
     }
 
     public void registerCosmetic(Cosmetic cosmetic) {
